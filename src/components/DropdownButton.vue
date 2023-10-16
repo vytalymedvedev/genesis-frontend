@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import {ref} from 'vue';
+import type { IStringKV } from '../interfaces/IStringKV';
 
-const props = defineProps<{
-  options: Array<string>,
+defineProps<{
+  options: Array<IStringKV>,
   selectedValue: string
 }>()
 
 const emit = defineEmits<{
-  select: [value: string]
+  select: [value: IStringKV]
 }>()
 
 const displayItems = ref<boolean>(false);
@@ -16,8 +17,8 @@ const onClick = () => {
   displayItems.value = !displayItems.value;
 }
 
-const onClickItem = (value: string) => {
-  emit('select', value);
+const onClickItem = (option: IStringKV) => {
+  emit('select', option);
   displayItems.value = false;
 }
 
@@ -30,8 +31,8 @@ const onClickItem = (value: string) => {
       <i class="arrow down"></i>
     </button>
     <div v-if="displayItems" class="items">
-      <div v-for="option in options" @click="onClickItem(option)" :key="option" class="item">
-        {{ option }}
+      <div v-for="option in options" @click="onClickItem(option)" :key="option.key" class="item">
+        {{ option.value }}
       </div>
     </div>
   </div>

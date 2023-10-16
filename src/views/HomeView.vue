@@ -1,28 +1,25 @@
 <script setup lang="ts">
-import axios from 'axios';
 import { ref, computed } from 'vue';
 import DropdownButton from '../components/DropdownButton.vue';
 import ButtonSpinner from '../components/ButtonSpinner.vue';
 import SimpleTable from '../components/SimpleTable.vue';
+import { useStore } from '../stores/store';
+import type { IStringKV } from '../interfaces/IStringKV';
+import type { Entity } from '../types/Entity';
+import  { options as entityOptions } from '../utils/entity-options';
 
-const options = ref<Array<string>>(['Не выбрано', 'Сделка', 'Контакт','Компания']);
-const selectedValue = ref<string>(options.value[0]);
-const items = ref<Array<{name: string, id: string}> | null>(null);
+const { entities, createEntity } = useStore();
+
+const forbiddenOption: Entity = 'empty';
+
+const options = ref<IStringKV[]>(entityOptions);
+const selectedValue = ref<IStringKV>(options.value[0]);
 const loading = ref<boolean>(false);
 
-const disabledButton = computed(() => selectedValue.value === options.value[0]);
+const disabledButton = computed(() => selectedValue.value?.key === forbiddenOption);
 
-//Mock data
-const details = [
-  {name: 'Контакт', id: '3248757'},
-  {name: 'Компания', id: '7567676'},
-  {name: 'Сделка', id: '978778'},
-  {name: 'Компания', id: '45654'},
-  {name: 'Компания', id: '6546667'}
-];
-
-const onSelect = (value: string) => {
-  selectedValue.value = value;
+const onSelect = (option: IStringKV) => {
+  selectedValue.value = option;
 }
 const onClick = async () => {
   if(loading.value) {
@@ -31,13 +28,14 @@ const onClick = async () => {
 
   loading.value = true;
 
-  items.value = await new Promise(resolve => setTimeout(() => {
-    resolve(details);
-  }, 2000));
-  
-  loading.value = false;
+  try {
+    await createEntity({entityName: selectedValue.value?.key, name: 'asdsdd'});
+  } catch (e: any) {
+    console.log(e);
+  } finally {
+    loading.value = false;
+  }
 }
-
 </script>
 
 <template>
@@ -47,7 +45,7 @@ const onClick = async () => {
       <DropdownButton 
         @select="onSelect"
         :options="options"
-        :selected-value="selectedValue"
+        :selected-value="selectedValue.value"
       />
       <ButtonSpinner
         @click="onClick"
@@ -58,7 +56,7 @@ const onClick = async () => {
       />
     </div>
     <SimpleTable 
-      :items="items"
+      :items="entities"
       class="simple-table"
     />
   </main>
