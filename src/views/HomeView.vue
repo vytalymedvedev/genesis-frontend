@@ -29,7 +29,7 @@ const onClick = async () => {
   loading.value = true;
 
   try {
-    await createEntity({entityName: selectedValue.value?.key, name: 'asdsdd'});
+    await createEntity({entityName: selectedValue.value?.key, name: selectedValue.value?.value});
   } catch (e: any) {
     console.log(e);
   } finally {
