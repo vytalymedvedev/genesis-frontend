@@ -16,9 +16,6 @@ export const useStore = defineStore('common', () => {
 
       await axios.post(`${import.meta.env.VITE_BACKEND_BASE_URL}${obj.entityName}/create`, entityData)
       .then(response => addEntity({ id: response.data, name: obj.name}));
-  
-      // await axios.get(`${import.meta.env.VITE_BACKEND_BASE_URL}company/all`)
-      //  .then(response => console.log(response.data));
   }
 
   return { entities, addEntity, createEntity }
