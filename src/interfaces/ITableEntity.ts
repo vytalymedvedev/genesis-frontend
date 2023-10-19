@@ -1,4 +1,4 @@
 export interface ITableEntity {
-  id: string,
+  id: number,
   name: string,
 }
