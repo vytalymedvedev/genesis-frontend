@@ -44,3 +44,7 @@ npm run build
 ```sh
 npm run lint
 ```
+### Usage
+
+This is frontend part and requires backend running on port 3000.
+If it changed, set correct value to VITE_BACKEND_BASE_URL in .env file.
